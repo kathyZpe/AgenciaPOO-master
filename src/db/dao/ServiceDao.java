@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -93,7 +95,37 @@ public class ServiceDao extends SQLConnection implements Dao<Service> {
 
     @Override
     public List<Service> getAll() {
-        return null;
+        String sql = "SELECT * FROM services;";
+        List<Service> serviceList = new ArrayList<>();
+        try{
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                int temp_id = resultSet.getInt(ServiceStatements.COLUMN_ID);
+                int serviceType = resultSet.getInt(ServiceStatements.COLUMN_TYPE);
+                boolean delivered = resultSet.getBoolean(ServiceStatements.COLUMN_DELIVERED);
+                Date arrival = resultSet.getDate(ServiceStatements.COLUMN_ARRIVAL);
+                Date quit = resultSet.getDate(ServiceStatements.COLUMN_QUIT);
+                String name = resultSet.getString(ServiceStatements.COLUMN_NAME);
+                String surname = resultSet.getString(ServiceStatements.COLUMN_SURNAME);
+                String model = resultSet.getString(ServiceStatements.COLUMN_MODEL);
+                String registration = resultSet.getString(ServiceStatements.COLUMN_REGISTRATION);
+                String phone = resultSet.getString(ServiceStatements.COLUMN_PHONE);
+                String email = resultSet.getString(ServiceStatements.COLUMN_EMAIL);
+
+
+                Service service = new Service(temp_id, serviceType, delivered, 
+                arrival, quit, name, surname, model, registration, phone, email);
+                serviceList.add(service);
+            }
+            resultSet.close();
+            statement.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+            listener.onSQLException("Error trying to get all services");
+        }
+        return serviceList;
     }
 
     @Override

@@ -28,12 +28,14 @@ public class ServiceWindow extends JFrame implements WindowListener {
 
     private JButton deleteButton;
     private JButton closeButton;
+    private JButton deliverButton;
 
-    private Service service;
+    private Service serviceSelected;
     private ServiceDao serviceDao;
 
     public interface ServiceWindowListener {
         void onDelete(); // Evento para cuando se elimina el servicio
+        void onDelivered(); // Evento para cuando se entrega el servicio
     }
 
     private ServiceWindowListener listener;
@@ -42,27 +44,41 @@ public class ServiceWindow extends JFrame implements WindowListener {
         /*
         * Se crean objetos, se dan valores por defecto y se agregan listeners a los componentes
         * */
-        this.service = service;
+        this.serviceSelected = service;
         serviceDao = new ServiceDao();
 
         initializePanels();
         initializeButtons();
         initializeLabels();
 
+        deliverButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                serviceSelected.setDelivered(true);
+                serviceDao.update(serviceSelected);
+                deliveredLabel.setText("Entregado");
+                listener.onDelivered();
+            }
+
+        });
+
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                serviceDao.delete(service.getId()); // Borra el
+                serviceDao.delete(serviceSelected.getId()); // Borra el
                 listener.onDelete();
                 dispose();
             }
         });
 
         closeButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
+
         });
 
         setUp();
@@ -91,13 +107,14 @@ public class ServiceWindow extends JFrame implements WindowListener {
         // Panel Sur
         southPanel.add(deleteButton);
         southPanel.add(closeButton);
+        southPanel.add(deliverButton);
 
         add(northPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
 
         setTitle("Servicio");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
         addWindowListener(this);
@@ -134,6 +151,9 @@ public class ServiceWindow extends JFrame implements WindowListener {
 
         closeButton = new JButton("Cerrar");
         closeButton.setBackground(new Color(247, 191, 190, 255));
+        
+        deliverButton = new JButton("Entregar");
+        deliverButton.setBackground(new Color(247, 191, 190, 255));
     }
 
     private void initializeLabels() {
@@ -155,15 +175,15 @@ public class ServiceWindow extends JFrame implements WindowListener {
 
     private void setInfo() {
         // Establece la informacion que sera desplega en los componentes
-        if (service.getService() == 0) {
+        if (serviceSelected.getService() == 0) {
             typeLabel.setText("Reparacion");
-        } else if (service.getService() == 1) {
+        } else if (serviceSelected.getService() == 1) {
             typeLabel.setText("Mantenimiento");
         }
 
-        arrivalLabel.setText(service.getArrival().toString());
-        quitLabel.setText(service.getQuit().toString());
-        if (service.isDelivered()) {
+        arrivalLabel.setText(serviceSelected.getArrival().toString());
+        quitLabel.setText(serviceSelected.getQuit().toString());
+        if (serviceSelected.isDelivered()) {
             deliveredLabel.setText("Entregado");
         } else {
             deliveredLabel.setText("No entregado");

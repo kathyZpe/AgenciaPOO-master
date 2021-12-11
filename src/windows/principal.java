@@ -182,7 +182,9 @@ public class principal extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 service = serviceJList.getSelectedValue();
-                updateLabelsByService();
+                if(service != null){
+                    updateLabelsByService();
+                }
             }
 
         });
@@ -243,11 +245,14 @@ public class principal extends JFrame {
                     int id = Integer.parseInt(textField.getText());
                     Service tempService = serviceDao.get(id);
                     serviceModel.clear();
-                    serviceModel.addElement(tempService);
+                    if(tempService != null){
+                        serviceModel.addElement(tempService);
+                    }
 
                 } else {
                     updateServiceListAll();
                 }
+                serviceJList.setSelectedIndex(-1);
             }
         });
 
@@ -255,14 +260,25 @@ public class principal extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
+                    service = serviceJList.getSelectedValue();
                     ServiceWindow serviceWindow = new ServiceWindow(service);
+                    
                     serviceWindow.setServiceWindowListener(new ServiceWindow.ServiceWindowListener() {
+
+                        @Override
+                        public void onDelivered() {
+                            updateServiceListAll();
+                            clearLabels();
+                            service = null;
+                            serviceJList.setSelectedIndex(-1);
+                        };
 
                         @Override
                         public void onDelete() {
                             updateServiceListAll();
                             clearLabels();
                             service = null;
+                            serviceJList.setSelectedIndex(-1);
                         }
 
                     });
@@ -343,8 +359,8 @@ public class principal extends JFrame {
     }
 
     private void initializeButton() {
-        nextButton = new JButton("Añadir Servicio");
-        insertButton = new JButton("Añadir Cliente");
+        nextButton = new JButton("A\u00F1adir Servicio");
+        insertButton = new JButton("A\u00F1adir Cliente");
     }
 
     private void initializeText() {
@@ -369,12 +385,8 @@ public class principal extends JFrame {
         serviceJList = new JList<>(serviceModel);
 
         serviceList = serviceDao.getAll();
-        if (serviceList != null) {
-
-            for (int index = 0; index < serviceList.size(); index++) {
-                serviceModel.addElement(serviceList.get(index));
-            }
-
+        for (int index = 0; index < serviceList.size(); index++) {
+            serviceModel.addElement(serviceList.get(index));
         }
 
         serviceJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -390,11 +402,8 @@ public class principal extends JFrame {
     private void updateServiceListAll() {
         serviceModel.clear();
         serviceList = serviceDao.getAll();
-        if (serviceList != null) {
-
-            for (int index = 0; index < serviceList.size(); index++) {
-                serviceModel.addElement(serviceList.get(index));
-            }
+        for (int index = 0; index < serviceList.size(); index++) {
+            serviceModel.addElement(serviceList.get(index));
         }
     }
 
