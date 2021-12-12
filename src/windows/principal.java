@@ -5,27 +5,19 @@ import exceptions.BadInputException;
 import listeners.AddClientListener;
 import db.dao.ServiceDao;
 
-import javax.security.auth.PrivateCredentialPermission;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.KeyListener;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.DataInput;
-import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 import java.util.regex.*;
 import java.util.regex.Pattern;
 import java.sql.Date;
 
-public class principal extends JFrame {
+public class principal extends JFrame implements WindowListener {
 
     private JPanel contenidoPanel;
     private JPanel subPanel1;
@@ -438,4 +430,38 @@ public class principal extends JFrame {
         setVisible(true);
     }
 
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        serviceDao.close();
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 }
