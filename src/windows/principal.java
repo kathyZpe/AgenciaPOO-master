@@ -63,6 +63,10 @@ public class principal extends JFrame implements WindowListener {
     private int typeService;
 
     public principal() {
+        /*
+         * Se crean objetos, se dan valores por defecto y se agregan listeners a los
+         * componentes
+         */
 
         serviceDao = new ServiceDao();
         serviceModel = new DefaultListModel<>();
@@ -79,7 +83,7 @@ public class principal extends JFrame implements WindowListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-
+                    // Valida los datos necesarios para registrar servicios
                     if (newName == null)
                         throw new BadInputException("No se registro el nombre");
                     if (newSurname == null)
@@ -107,6 +111,7 @@ public class principal extends JFrame implements WindowListener {
                     Date quit = Date.valueOf(dateQuitF.getText());
 
                     dispose();
+                    // Registra nuevo servicio
                     Service service = new Service(typeService,
                             arrival,
                             quit,
@@ -131,14 +136,14 @@ public class principal extends JFrame implements WindowListener {
         combo.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                typeService = combo.getSelectedIndex();
+                typeService = combo.getSelectedIndex(); // Obtiene el tipo de servicio
             }
         });
 
         insertButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                // Crea ventana para registrar los datos de la persona que contrata el servicio
                 AddClientWindow window = new AddClientWindow();
                 window.setAddClientListener(new AddClientListener() {
 
@@ -303,7 +308,10 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void setUp() {
-
+        /*
+         * Agrega los componentes a los paneles o frame respectivos, al igual que
+         * configura el frame
+         */
         subPanel1.add(nameLabel);
         subPanel1.add(surnameLabel);
         subPanel1.add(emailLabel);
@@ -338,7 +346,7 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void initializePanels() {
-
+        // Inicializa y configura todos los JPanel
         contenidoPanel = new JPanel(new GridLayout(1, 2));
         subPanel1 = new JPanel();
         subPanel1.setBorder(BorderFactory.createTitledBorder("Cliente"));
@@ -351,17 +359,20 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void initializeButton() {
+        // Inicializa y configura todos los JButton
         nextButton = new JButton("A\u00F1adir Servicio");
         insertButton = new JButton("A\u00F1adir Cliente");
     }
 
     private void initializeText() {
+        // Inicializa y configura todos los JTextField
         dateQuitF = new JTextField();
         dateInputF = new JTextField();
         searchTextField = new JTextField(10);
     }
 
     private void initializeLabel() {
+        // Inicializa y configura todos los JLabel
         nameLabel = new JLabel("Nombre:");
         surnameLabel = new JLabel("Apellido:");
         emailLabel = new JLabel("Correo:");
@@ -374,6 +385,7 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void initializeList() {
+        // Inicializa y configura todos los JList
         serviceJList = new JList<>(serviceModel);
 
         serviceList = serviceDao.getAll();
@@ -386,12 +398,14 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void initializeCombobox() {
+        // Inicializa y configura todos los JCombobox
         combo = new JComboBox<>();
         combo.addItem("Mantenimiento");
         combo.addItem("Refacciones");
     }
 
     private void updateServiceListAll() {
+        // Actualiza JList con todos los servicios
         serviceModel.clear();
         serviceList = serviceDao.getAll();
         for (int index = 0; index < serviceList.size(); index++) {
@@ -400,6 +414,7 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void updateLabelByAdding() {
+        // Actualiza JLbales con datos del usuario introducido
         nameLabel.setText("Nombre: " + newName);
         surnameLabel.setText("Apellido: " + newSurname);
         emailLabel.setText("Correo: " + newEmail);
@@ -409,6 +424,7 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void updateLabelsByService() {
+        // Actualiza JLabels con los datos del servicio escogido
         nameLabel.setText("Nombre: " + service.getName());
         surnameLabel.setText("Apellido: " + service.getSurname());
         emailLabel.setText("Correo: " + service.getEmail());
@@ -418,6 +434,7 @@ public class principal extends JFrame implements WindowListener {
     }
 
     private void clearLabels() {
+        // Se limpian los JLabel
         nameLabel.setText("Nombre:");
         surnameLabel.setText("Apellido:");
         emailLabel.setText("Correo:");
@@ -427,6 +444,7 @@ public class principal extends JFrame implements WindowListener {
     }
 
     public void run() {
+        // Despliaega la ventana
         setVisible(true);
     }
 
@@ -442,7 +460,7 @@ public class principal extends JFrame implements WindowListener {
 
     @Override
     public void windowClosed(WindowEvent e) {
-        serviceDao.close();
+        serviceDao.close(); // Cierra base de datos
     }
 
     @Override
