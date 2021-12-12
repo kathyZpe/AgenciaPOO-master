@@ -179,7 +179,7 @@ public class principal extends JFrame implements WindowListener {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 service = serviceJList.getSelectedValue();
-                if(service != null){
+                if (service != null) {
                     updateLabelsByService();
                 }
             }
@@ -242,7 +242,7 @@ public class principal extends JFrame implements WindowListener {
                     int id = Integer.parseInt(textField.getText());
                     Service tempService = serviceDao.get(id);
                     serviceModel.clear();
-                    if(tempService != null){
+                    if (tempService != null) {
                         serviceModel.addElement(tempService);
                     }
 
@@ -259,7 +259,7 @@ public class principal extends JFrame implements WindowListener {
                 if (e.getClickCount() == 2) {
                     service = serviceJList.getSelectedValue();
                     ServiceWindow serviceWindow = new ServiceWindow(service);
-                    
+
                     serviceWindow.setServiceWindowListener(new ServiceWindow.ServiceWindowListener() {
 
                         @Override
@@ -431,6 +431,13 @@ public class principal extends JFrame implements WindowListener {
         phoneLabel.setText("Telefono: " + service.getPhone());
         modelLabel.setText("Modelo: " + service.getModel());
         registrationLabel.setText("Matricula: " + service.getRegistration());
+
+        newName = null;
+        newSurname = null;
+        newEmail = null;
+        newPhone = null;
+        newModel = null;
+        newRegistration = null;
     }
 
     private void clearLabels() {
